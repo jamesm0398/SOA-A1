@@ -1,0 +1,10 @@
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\bin\Debug\SOA-A1-Consumer.exe.config
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\bin\Debug\SOA-A1-Consumer.exe
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\bin\Debug\SOA-A1-Consumer.pdb
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA-A1-Consumer.csprojAssemblyReference.cache
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA_A1_Consumer.Form1.resources
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA_A1_Consumer.Properties.Resources.resources
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA-A1-Consumer.csproj.GenerateResource.cache
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA-A1-Consumer.csproj.CoreCompileInputs.cache
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA-A1-Consumer.exe
+C:\Users\jmilne8346\Desktop\SOA-A1\SOA-A1-Consumer\SOA-A1-Consumer\obj\Debug\SOA-A1-Consumer.pdb

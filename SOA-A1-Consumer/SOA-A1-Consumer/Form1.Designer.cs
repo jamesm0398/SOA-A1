@@ -34,6 +34,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.responseMsg = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.Reg_IP = new System.Windows.Forms.TextBox();
+            this.register = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.teamName = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -86,12 +92,69 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(432, 100);
+            this.button1.Location = new System.Drawing.Point(430, 95);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 5;
             this.button1.Text = "Execute";
             this.button1.UseVisualStyleBackColor = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(587, 159);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(100, 19);
+            this.label4.TabIndex = 6;
+            this.label4.Text = "Register team";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(460, 246);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(138, 19);
+            this.label5.TabIndex = 7;
+            this.label5.Text = "Registry IP Address:";
+            // 
+            // Reg_IP
+            // 
+            this.Reg_IP.Location = new System.Drawing.Point(604, 245);
+            this.Reg_IP.Name = "Reg_IP";
+            this.Reg_IP.Size = new System.Drawing.Size(140, 20);
+            this.Reg_IP.TabIndex = 8;
+            // 
+            // register
+            // 
+            this.register.Location = new System.Drawing.Point(464, 305);
+            this.register.Name = "register";
+            this.register.Size = new System.Drawing.Size(75, 23);
+            this.register.TabIndex = 9;
+            this.register.Text = "Register";
+            this.register.UseVisualStyleBackColor = true;
+            this.register.Click += new System.EventHandler(this.Register_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(460, 199);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(88, 19);
+            this.label6.TabIndex = 10;
+            this.label6.Text = "Team name:";
+            // 
+            // teamName
+            // 
+            this.teamName.AutoSize = true;
+            this.teamName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.teamName.Location = new System.Drawing.Point(600, 198);
+            this.teamName.Name = "teamName";
+            this.teamName.Size = new System.Drawing.Size(49, 19);
+            this.teamName.TabIndex = 11;
+            this.teamName.Text = "Chaos";
             // 
             // Form1
             // 
@@ -99,6 +162,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.teamName);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.register);
+            this.Controls.Add(this.Reg_IP);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.responseMsg);
             this.Controls.Add(this.label3);
@@ -120,6 +189,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox responseMsg;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox Reg_IP;
+        private System.Windows.Forms.Button register;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label teamName;
     }
 }
 
