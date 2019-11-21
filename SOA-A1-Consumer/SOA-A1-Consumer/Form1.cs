@@ -20,6 +20,8 @@ namespace SOA_A1_Consumer
     public partial class Form1 : Form
     {
         Socket soa_socket;
+        bool regOrUnreg = true;  //flag to change the register button to unregister after the user has clicked it, true represents register, false represents unregister
+        int teamID = 0;  //TEAM ID assigned after registration
 
         public Form1()
         {
@@ -35,6 +37,8 @@ namespace SOA_A1_Consumer
         //Returns: none
         private void Register_Click(object sender, EventArgs e)
         {
+
+            
 
             //attempt to connect to the registry IP
             try
@@ -57,7 +61,18 @@ namespace SOA_A1_Consumer
             //attempt to send team name to registry
             try
             {
-                Object regData = "DRC|REG-TEAM|||\rINF|"+teamName.Text+"|||\r" + Path.DirectorySeparatorChar + "\r" ;
+                Object regData;
+
+                if(regOrUnreg == true)
+                {
+                   regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + Path.DirectorySeparatorChar + "\r";
+                }
+                else
+                {
+                   regData = "DRC|UNREG-TEAM|"+teamName.Text+"|"+teamID+"|\r" + Path.DirectorySeparatorChar + "\r";
+                }
+
+               
                 byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
                 soa_socket.Send(byteData);
             }
@@ -85,6 +100,49 @@ namespace SOA_A1_Consumer
                 MessageBox.Show(se.Message);
             }
 
+            regOrUnreg = false;
+            if(regOrUnreg == false)
+            {
+                register.Text = "Unregister";
+            }
+
+            else
+            {
+                register.Text = "Register";
+            }
+           
+
+        }
+
+        //Query_Click
+        //Summary: Query the registery to look for the service
+        //Params: sender, e
+        //Returns: none
+        private void Query_Click(object sender, EventArgs e)
+        {
+            string tag_name = "";
+
+            if(serviceList.SelectedIndex == 0)
+            {
+                tag_name = "GIORP-TOTAL";
+            }
+
+            else
+            {
+                //tag name = other service tagname
+            }
+
+            try
+            {
+                Object queryData;
+               // queryData = ""
+            }
+
+            catch
+            {
+
+            }
+            
         }
     }
 }

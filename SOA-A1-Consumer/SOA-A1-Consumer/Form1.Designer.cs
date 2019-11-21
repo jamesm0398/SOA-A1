@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.serviceList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.responseMsg = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -40,6 +40,7 @@
             this.register = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.teamName = new System.Windows.Forms.Label();
+            this.query = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -62,15 +63,15 @@
             this.label2.TabIndex = 1;
             this.label2.Text = "Select a service:";
             // 
-            // comboBox1
+            // serviceList
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.serviceList.FormattingEnabled = true;
+            this.serviceList.Items.AddRange(new object[] {
             "GIORP-5000 Purchase Totalizer"});
-            this.comboBox1.Location = new System.Drawing.Point(179, 97);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(180, 21);
-            this.comboBox1.TabIndex = 2;
+            this.serviceList.Location = new System.Drawing.Point(179, 97);
+            this.serviceList.Name = "serviceList";
+            this.serviceList.Size = new System.Drawing.Size(180, 21);
+            this.serviceList.TabIndex = 2;
             // 
             // label3
             // 
@@ -92,7 +93,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(430, 95);
+            this.button1.Location = new System.Drawing.Point(513, 96);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 5;
@@ -156,12 +157,23 @@
             this.teamName.TabIndex = 11;
             this.teamName.Text = "Chaos";
             // 
+            // query
+            // 
+            this.query.Location = new System.Drawing.Point(406, 96);
+            this.query.Name = "query";
+            this.query.Size = new System.Drawing.Size(75, 23);
+            this.query.TabIndex = 12;
+            this.query.Text = "Query";
+            this.query.UseVisualStyleBackColor = true;
+            this.query.Click += new System.EventHandler(this.Query_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.query);
             this.Controls.Add(this.teamName);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.register);
@@ -171,7 +183,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.responseMsg);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.serviceList);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Form1";
@@ -185,7 +197,7 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox serviceList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox responseMsg;
         private System.Windows.Forms.Button button1;
@@ -195,6 +207,7 @@
         private System.Windows.Forms.Button register;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label teamName;
+        private System.Windows.Forms.Button query;
     }
 }
 
