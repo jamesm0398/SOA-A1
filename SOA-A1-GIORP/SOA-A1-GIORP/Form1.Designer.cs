@@ -35,6 +35,8 @@
             this.publish = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.teamName = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.regResponse = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -101,11 +103,30 @@
             this.teamName.TabIndex = 8;
             this.teamName.Text = "Chaos";
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(41, 374);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(99, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Registry Response:";
+            // 
+            // regResponse
+            // 
+            this.regResponse.Location = new System.Drawing.Point(146, 371);
+            this.regResponse.Multiline = true;
+            this.regResponse.Name = "regResponse";
+            this.regResponse.Size = new System.Drawing.Size(137, 29);
+            this.regResponse.TabIndex = 10;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.regResponse);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.teamName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.publish);
@@ -130,6 +151,8 @@
         private System.Windows.Forms.Button publish;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label teamName;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox regResponse;
     }
 }
 

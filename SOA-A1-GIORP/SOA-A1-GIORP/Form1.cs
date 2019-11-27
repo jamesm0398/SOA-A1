@@ -21,6 +21,7 @@ namespace SOA_A1_GIORP
         public Socket registerSocket;
         public AsyncCallback pfnWorkerCallBack;
         int teamID = 0;
+        string giorpResponse = "";
 
         public Form1()
         {
@@ -107,6 +108,27 @@ namespace SOA_A1_GIORP
                 Decoder d = Encoding.UTF8.GetDecoder();
                 int charLen = d.GetChars(theSockId.dataBuffer, 0, iRx, chars, 0);
                 string szData = new string(chars);
+
+                //parse the execute message, split based on the position of the | character
+                string[] szDataParts = szData.Split('|');
+                string province = szDataParts[16];
+                double purchAmount;
+                int errorCode = 0;
+                bool isDouble = Double.TryParse(szDataParts[22], out purchAmount);
+                if(isDouble)
+                {
+                    // purchAmount = double.Parse(szDataParts[22]);
+                    giorpResponse = Totalizer(province, purchAmount);
+                }
+                else
+                {
+                    errorCode = 3;
+                    giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Purchase amount not a double||\r" + Path.DirectorySeparatorChar + "\r";
+                }
+                
+
+
+
              //   txtDataRx.Text = txtDataRx.Text + szData;
                 WaitForData(giorpSocketWorker);
             }
@@ -250,12 +272,157 @@ namespace SOA_A1_GIORP
                     "RSP|4|GSTAmount|double||\r" +
                     "RSP|5|TotalAmount|double||\r" +
                     "MCH|" + regIP.Text + "|3245|\r" + Path.DirectorySeparatorChar + "\r";
+
+                byte[] byteData = Encoding.ASCII.GetBytes(data.ToString());
+                giorpSocketWorker.Send(byteData);
             }
 
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
             }
+
+            //received message from registry
+            try
+            {
+                byte[] buffer = new byte[1024];
+                int iRx = giorpSocketWorker.Receive(buffer);
+                char[] chars = new char[iRx];
+
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
+                String szData = new System.String(chars);
+                regResponse.Text = szData;
+            }
+
+            catch (System.Net.Sockets.SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
+        }
+
+        //Totalizer
+        //Summary: Called when all of the parameters from an execute message have been received, it will actually do the calculations for tax for each province
+        //Params: prov: The province used to determine the tax amount, purchaseAmount: the pre-tax amount
+        //Returns: string: the response to send back to the client
+        public string Totalizer(string prov, double purchaseAmount)
+        {
+            bool pass = true;
+            string errorMsg = "";
+            double totalPrice = 0;
+            double hstAdded = 0;
+            double pstAdded = 0;
+            double gstAdded = 0;
+            string respString = "";
+            int errorCode = 0;
+
+            if(purchaseAmount < 0)
+            {
+                errorMsg = "Purchase amount cannot be less than 0";
+                errorCode = 2;
+            }
+
+            switch(prov)
+            {
+                case "NL":
+                    totalPrice = purchaseAmount + 0.13 * purchaseAmount;
+                    hstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "NS":
+                    totalPrice = purchaseAmount + 0.15 * purchaseAmount;
+                    hstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "NB":
+                    totalPrice = purchaseAmount + 0.13 * purchaseAmount;
+                    hstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "PE":
+                    totalPrice = (purchaseAmount + (0.05 * purchaseAmount));
+                    gstAdded = totalPrice - purchaseAmount;
+                    totalPrice = totalPrice * 0.10;
+                    pstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "QC":
+                    totalPrice = (purchaseAmount + (0.05 * purchaseAmount));
+                    gstAdded = totalPrice - purchaseAmount;
+                    totalPrice = totalPrice * 0.095;
+                    pstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "ON":
+                    totalPrice = purchaseAmount + 0.13 * purchaseAmount;
+                    hstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "MB":
+                    totalPrice = purchaseAmount + 0.07 * purchaseAmount;
+                    pstAdded = totalPrice - purchaseAmount;
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    totalPrice = purchaseAmount + pstAdded + gstAdded;
+                    break;
+
+                case "SK":
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    pstAdded = totalPrice - purchaseAmount;
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    totalPrice = purchaseAmount + pstAdded + gstAdded;
+                    break;
+
+                case "AB":
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "BC":
+                    totalPrice = purchaseAmount + 0.12 * purchaseAmount;
+                    hstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "YT":
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "NT":
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                case "NU":
+                    totalPrice = purchaseAmount + 0.05 * purchaseAmount;
+                    gstAdded = totalPrice - purchaseAmount;
+                    break;
+
+                default:
+                    errorMsg = "Not a valid province";
+                    errorCode = 1;
+                    pass = false;
+                    break;
+            }
+
+            if(pass)
+            {
+                respString = "\vPUB|OK|||5|\r" +
+                    "RSP|1|subTotal|double|" + purchaseAmount + "|\r" +
+                    "RSP|2|pstAmount|double|" + pstAdded + "|\r" +
+                    "RSP|3|pstAmount|double|" + hstAdded + "|\r" +
+                    "RSP|4|pstAmount|double|" + gstAdded + "|\r" +
+                    "RSP|5|pstAmount|double|" + totalPrice + "|\r" + Path.DirectorySeparatorChar + "\r";
+            }
+
+            else
+            {
+                respString = "\vPUB|NOT-OK|" + errorCode + "|" + errorMsg + "||\r" + Path.DirectorySeparatorChar + "\r";
+
+            }
+
+            return respString;
         }
     }
 }
