@@ -11,14 +11,19 @@ using System.Net;
 using System.Net.Sockets;
 using System.IO;
 
+//SOA-A1-GIORP
+//Summary: This is the C# purchase totalizer service, it contains sockets for communicating with 
+//         other teams' consumers as well as the registry, along with the totalizer logic for calculating tax amounts
+//Programmers: James Milne, John Hall
+//Date: Dec 5th 2019
 
 namespace SOA_A1_GIORP
 {
     public partial class Form1 : Form
     {
-        public Socket giorpSocketListener;
-        public Socket giorpSocketWorker;
-        public Socket registerSocket;
+        public Socket giorpSocketListener;              //socket for listening for messages from other teams
+        public Socket giorpSocketWorker;                //socket for sending messages back to the teams
+        public Socket registerSocket;                   //socket for communicating with registry
         public AsyncCallback pfnWorkerCallBack;
         int teamID = 0;
         string giorpResponse = "";
@@ -34,7 +39,7 @@ namespace SOA_A1_GIORP
         //Returns: none
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
         }
 
         //OnClientConnect
@@ -115,7 +120,56 @@ namespace SOA_A1_GIORP
                 double purchAmount;
                 int errorCode = 0;
                 bool isDouble = Double.TryParse(szDataParts[22], out purchAmount);
-                if(isDouble)
+                bool teamIsValid = false;
+
+                //verify that team can use this service with query-team message
+                string queryTeamName = "";
+                string queryTeamID = "";
+
+                queryTeamName = szDataParts[2]; //the name of the team asking to use this service
+                queryTeamID = szDataParts[3]; //the id of the team asking to use this service
+
+                try
+                {
+                    Object queryObj = "\vDRC|QUERY-TEAM|Chaos|" + teamID + "|\r" +
+                                        "INF|" + queryTeamName + "|" + queryTeamID + "|GIORP-TOTAL|\r" + Path.DirectorySeparatorChar + "\r";
+                    byte[] queryBytes = Encoding.ASCII.GetBytes(queryObj.ToString());
+                    registerSocket.Send(queryBytes);
+                }
+
+                catch (SocketException e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+
+                try
+                {
+                    byte[] queryResp = new byte[1024];
+                    int iRqx = registerSocket.Receive(queryResp);
+                    char[] Qchars = new char[iRqx];
+
+                    Decoder Queryd = Encoding.UTF8.GetDecoder();
+                    int QcharLen = Queryd.GetChars(queryResp, 0, iRx, chars, 0);
+                    String qData = new string(chars);
+                    if(!(qData.Contains("NOT")))
+                    {
+                        teamIsValid = true;
+                    }
+
+                    else
+                    {
+                        errorCode = 4;
+                        giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Your team has insufficient permissions to use this service||\r" + Path.DirectorySeparatorChar + "\r";
+                    }
+                }
+
+                catch(SocketException e)
+                {
+                    MessageBox.Show(e.Message);
+                }
+
+
+                if(isDouble && teamIsValid)
                 {
                     // purchAmount = double.Parse(szDataParts[22]);
                     giorpResponse = Totalizer(province, purchAmount);
@@ -126,7 +180,18 @@ namespace SOA_A1_GIORP
                     giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Purchase amount not a double||\r" + Path.DirectorySeparatorChar + "\r";
                 }
                 
-
+                //try to send response message
+                try
+                {
+                    Object objResp = giorpResponse;
+                    byte[] byResp = Encoding.ASCII.GetBytes(objResp.ToString());
+                    giorpSocketWorker.Send(byResp);
+                }
+               
+                catch(SocketException e)
+                {
+                    MessageBox.Show(e.Message);
+                }
 
 
              //   txtDataRx.Text = txtDataRx.Text + szData;
@@ -142,6 +207,10 @@ namespace SOA_A1_GIORP
             }
         }
 
+        //Regteam_click
+        //Summary: This is called when the team has to register the service on the registry
+        //Params: sender, e
+        //Returns: none
         private void regTeam_Click(object sender, EventArgs e)
         {
             //attempt to connect to the registry IP
@@ -193,7 +262,7 @@ namespace SOA_A1_GIORP
                 int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
                 String szData = new System.String(chars);
                
-                if(szData.Contains("OK"))
+                if(!(szData.Contains("NOT")))
                 {
 
                     string[] dataParts = szData.Split('|');
@@ -217,6 +286,11 @@ namespace SOA_A1_GIORP
             }
         }
 
+
+        //BeginListening
+        //Summary: Listen for any clients wanting to connect
+        //Params: none
+        //Returns: none
         public void BeginListening()
         {
             try
@@ -239,6 +313,10 @@ namespace SOA_A1_GIORP
             }
         }
 
+        //Publish_click
+        //Summary: Called when the service is to be published to the registry
+        //Params: sender, e
+        //Returns: none
         private void publish_Click(object sender, EventArgs e)
         {
             try
@@ -423,6 +501,17 @@ namespace SOA_A1_GIORP
             }
 
             return respString;
+        }
+
+        //Close/shutdown all sockets before exiting
+        public void OnProcessExit(object sender, EventArgs e)
+        {
+            giorpSocketListener.Shutdown(SocketShutdown.Both);
+            giorpSocketWorker.Shutdown(SocketShutdown.Both);
+            registerSocket.Shutdown(SocketShutdown.Both);
+            giorpSocketListener.Close();
+            giorpSocketWorker.Close();
+            registerSocket.Close();
         }
     }
 }

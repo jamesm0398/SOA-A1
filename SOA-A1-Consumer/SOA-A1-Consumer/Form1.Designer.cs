@@ -33,7 +33,7 @@
             this.serviceList = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.responseMsg = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.execute = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.Reg_IP = new System.Windows.Forms.TextBox();
@@ -41,6 +41,16 @@
             this.label6 = new System.Windows.Forms.Label();
             this.teamName = new System.Windows.Forms.Label();
             this.query = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label11 = new System.Windows.Forms.Label();
+            this.param1 = new System.Windows.Forms.TextBox();
+            this.param2 = new System.Windows.Forms.TextBox();
+            this.param3 = new System.Windows.Forms.TextBox();
+            this.param4 = new System.Windows.Forms.TextBox();
+            this.param5 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -67,7 +77,10 @@
             // 
             this.serviceList.FormattingEnabled = true;
             this.serviceList.Items.AddRange(new object[] {
-            "GIORP-5000 Purchase Totalizer"});
+            "GIORP-5000 Purchase Totalizer",
+            "Pay Stub Generator",
+            "Car Loan Calculator",
+            "Canadian Postal Code Validator"});
             this.serviceList.Location = new System.Drawing.Point(179, 97);
             this.serviceList.Name = "serviceList";
             this.serviceList.Size = new System.Drawing.Size(180, 21);
@@ -85,20 +98,21 @@
             // 
             // responseMsg
             // 
-            this.responseMsg.Location = new System.Drawing.Point(36, 199);
+            this.responseMsg.Location = new System.Drawing.Point(36, 198);
             this.responseMsg.Multiline = true;
             this.responseMsg.Name = "responseMsg";
-            this.responseMsg.Size = new System.Drawing.Size(363, 163);
+            this.responseMsg.Size = new System.Drawing.Size(284, 36);
             this.responseMsg.TabIndex = 4;
             // 
-            // button1
+            // execute
             // 
-            this.button1.Location = new System.Drawing.Point(513, 96);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 5;
-            this.button1.Text = "Execute";
-            this.button1.UseVisualStyleBackColor = true;
+            this.execute.Location = new System.Drawing.Point(71, 415);
+            this.execute.Name = "execute";
+            this.execute.Size = new System.Drawing.Size(100, 23);
+            this.execute.TabIndex = 5;
+            this.execute.Text = "Execute";
+            this.execute.UseVisualStyleBackColor = true;
+            this.execute.Click += new System.EventHandler(this.execute_Click);
             // 
             // label4
             // 
@@ -161,11 +175,96 @@
             // 
             this.query.Location = new System.Drawing.Point(406, 96);
             this.query.Name = "query";
-            this.query.Size = new System.Drawing.Size(75, 23);
+            this.query.Size = new System.Drawing.Size(115, 23);
             this.query.TabIndex = 12;
-            this.query.Text = "Query";
+            this.query.Text = "Query Registry";
             this.query.UseVisualStyleBackColor = true;
             this.query.Click += new System.EventHandler(this.Query_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(32, 380);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(92, 19);
+            this.label7.TabIndex = 13;
+            this.label7.Text = "Parameter 5:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(32, 350);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(92, 19);
+            this.label8.TabIndex = 14;
+            this.label8.Text = "Parameter 4:";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(32, 321);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(92, 19);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Parameter 3:";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(32, 293);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(92, 19);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "Parameter 2:";
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(32, 264);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(92, 19);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Parameter 1:";
+            // 
+            // param1
+            // 
+            this.param1.Location = new System.Drawing.Point(131, 262);
+            this.param1.Name = "param1";
+            this.param1.Size = new System.Drawing.Size(100, 20);
+            this.param1.TabIndex = 18;
+            // 
+            // param2
+            // 
+            this.param2.Location = new System.Drawing.Point(131, 293);
+            this.param2.Name = "param2";
+            this.param2.Size = new System.Drawing.Size(100, 20);
+            this.param2.TabIndex = 19;
+            // 
+            // param3
+            // 
+            this.param3.Location = new System.Drawing.Point(131, 319);
+            this.param3.Name = "param3";
+            this.param3.Size = new System.Drawing.Size(100, 20);
+            this.param3.TabIndex = 20;
+            // 
+            // param4
+            // 
+            this.param4.Location = new System.Drawing.Point(131, 350);
+            this.param4.Name = "param4";
+            this.param4.Size = new System.Drawing.Size(100, 20);
+            this.param4.TabIndex = 21;
+            // 
+            // param5
+            // 
+            this.param5.Location = new System.Drawing.Point(131, 378);
+            this.param5.Name = "param5";
+            this.param5.Size = new System.Drawing.Size(100, 20);
+            this.param5.TabIndex = 22;
             // 
             // Form1
             // 
@@ -173,6 +272,16 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.param5);
+            this.Controls.Add(this.param4);
+            this.Controls.Add(this.param3);
+            this.Controls.Add(this.param2);
+            this.Controls.Add(this.param1);
+            this.Controls.Add(this.label11);
+            this.Controls.Add(this.label10);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.query);
             this.Controls.Add(this.teamName);
             this.Controls.Add(this.label6);
@@ -180,7 +289,7 @@
             this.Controls.Add(this.Reg_IP);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.execute);
             this.Controls.Add(this.responseMsg);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.serviceList);
@@ -188,6 +297,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -200,7 +310,7 @@
         private System.Windows.Forms.ComboBox serviceList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox responseMsg;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button execute;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox Reg_IP;
@@ -208,6 +318,16 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label teamName;
         private System.Windows.Forms.Button query;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox param1;
+        private System.Windows.Forms.TextBox param2;
+        private System.Windows.Forms.TextBox param3;
+        private System.Windows.Forms.TextBox param4;
+        private System.Windows.Forms.TextBox param5;
     }
 }
 

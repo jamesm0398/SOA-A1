@@ -1,0 +1,10 @@
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\bin\Debug\SOA-A1-GIORP.exe.config
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\bin\Debug\SOA-A1-GIORP.exe
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\bin\Debug\SOA-A1-GIORP.pdb
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA-A1-GIORP.csprojAssemblyReference.cache
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA_A1_GIORP.Form1.resources
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA_A1_GIORP.Properties.Resources.resources
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA-A1-GIORP.csproj.GenerateResource.cache
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA-A1-GIORP.csproj.CoreCompileInputs.cache
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA-A1-GIORP.exe
+C:\Users\james\Desktop\SOA-A1\SOA-A1-GIORP\SOA-A1-GIORP\obj\Debug\SOA-A1-GIORP.pdb
