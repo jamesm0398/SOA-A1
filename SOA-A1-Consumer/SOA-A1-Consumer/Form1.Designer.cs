@@ -98,10 +98,10 @@
             // 
             // responseMsg
             // 
-            this.responseMsg.Location = new System.Drawing.Point(36, 198);
+            this.responseMsg.Location = new System.Drawing.Point(36, 181);
             this.responseMsg.Multiline = true;
             this.responseMsg.Name = "responseMsg";
-            this.responseMsg.Size = new System.Drawing.Size(284, 36);
+            this.responseMsg.Size = new System.Drawing.Size(293, 75);
             this.responseMsg.TabIndex = 4;
             // 
             // execute

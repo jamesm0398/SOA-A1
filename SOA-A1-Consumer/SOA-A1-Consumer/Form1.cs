@@ -50,14 +50,39 @@ namespace SOA_A1_Consumer
             //attempt to connect to the registry IP
             try
             {
-                soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                String ip_addr = Reg_IP.Text;
-                String s_port = "3245";
+                //soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                //String ip_addr = Reg_IP.Text;
+                //String s_port = "3128";
 
-                int port = System.Convert.ToInt16(s_port, 10);
-                System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
-                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
-                soa_socket.Connect(remoteEndPoint);
+                //int port = System.Convert.ToInt32(s_port, 10);
+                //System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+                //soa_socket.ReceiveTimeout = 10000;
+                //soa_socket.Connect(remoteEndPoint);
+
+                //if(soa_socket.Connected)
+                //{
+                //    responseMsg.Text = "Connected";
+                //}
+
+
+                TcpClient client = new TcpClient(Reg_IP.Text, 3128);
+                NetworkStream stream = client.GetStream();
+                string data = "DRC|REG-TEAM |||\rINF | " + teamName.Text + " |||\r";
+                string response = "";
+
+                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(data);
+
+                stream.Write(bytesToSend, 0, bytesToSend.Length);
+
+
+                byte[] bytesRead = new byte[client.ReceiveBufferSize];
+                int bytesR = stream.Read(bytesRead, 0, client.ReceiveBufferSize);
+                response = Encoding.ASCII.GetString(bytesRead, 0, bytesRead.Length);
+                response = response.Replace("\0","");
+                responseMsg.Text = response;
+
+
             }
 
             catch (System.Net.Sockets.SocketException se)
@@ -66,46 +91,60 @@ namespace SOA_A1_Consumer
             }
 
             //attempt to send team name to registry
-            try
-            {
-                Object regData;
+            //try
+            //{
+            //    Object regData = "this is a test";
 
-                if(regOrUnreg == true)
-                {
-                   regData = "\vDRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + Path.DirectorySeparatorChar + "\r";
-                }
-                else
-                {
-                   regData = "\vDRC|UNREG-TEAM|"+teamName.Text+"|"+teamID+"|\r" + Path.DirectorySeparatorChar + "\r";
-                }
+
+            //    //if(regOrUnreg == true)
+            //    //{
+            //    //   regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r";
+            //    //}
+            //    //else
+            //    //{
+            //    //   regData = "DRC|UNREG-TEAM|"+teamName.Text+"|"+teamID+"|\r"  + "\r";
+            //    //}
 
                
-                byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
-                soa_socket.Send(byteData);
-            }
+            //    byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
+            //    soa_socket.Send(byteData);
+            //    soa_socket.Shutdown(SocketShutdown.Both);
+            //   // soa_socket.Close();
+            //}
 
-            catch (System.Net.Sockets.SocketException se)
-            {
-                MessageBox.Show(se.Message);
-            }
+            //catch (System.Net.Sockets.SocketException se)
+            //{
+            //    MessageBox.Show(se.Message);
+            //}
 
-            //received message from registry
-            try
-            {
-                byte[] buffer = new byte[1024];
-                int iRx = soa_socket.Receive(buffer);
-                char[] chars = new char[iRx];
+            ////received message from registry
+            //try
+            //{
+            //    soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+            //    String ip_addr = Reg_IP.Text;
+            //    String s_port = "3128";
 
-                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
-                int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
-                String szData = new System.String(chars);
-                responseMsg.Text = szData;
-            }
+            //    int port = System.Convert.ToInt32(s_port, 10);
+            //    System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+            //    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+            //    soa_socket.ReceiveTimeout = 10000;
+            //    soa_socket.Connect(remoteEndPoint);
+            //    byte[] buffer = new byte[1024];
+            //    int iRx = soa_socket.Receive(buffer);
+            //    char[] chars = new char[iRx];
 
-            catch (System.Net.Sockets.SocketException se)
-            {
-                MessageBox.Show(se.Message);
-            }
+            //    System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+            //    int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
+            //    String szData = new System.String(chars);
+            //    responseMsg.Text = szData;
+            //    soa_socket.Shutdown(SocketShutdown.Both);
+
+            //}
+
+            //catch (System.Net.Sockets.SocketException se)
+            //{
+            //    MessageBox.Show(se.Message);
+            //}
 
             regOrUnreg = false;
             if(regOrUnreg == false)
@@ -331,10 +370,10 @@ namespace SOA_A1_Consumer
         public void OnProcessExit(object sender, EventArgs e)
         {
            
-            soa_socket.Shutdown(SocketShutdown.Both);
+           // soa_socket.Shutdown(SocketShutdown.Both);
             soa_socket.Close();
-            service_socket.Shutdown(SocketShutdown.Both);
-            service_socket.Close();
+          //  service_socket.Shutdown(SocketShutdown.Both);
+           // service_socket.Close();
          
         }
     }
