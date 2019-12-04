@@ -147,3 +147,26 @@ Message sent to 10.192.45.108	12/04/2019 12:01:38
 DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||engineer|ARG|2|HoursWorked|FLOAT||33.8|ARG|3|PayRate|FLOAT||55.6|ARG|4|PiecesMade|INT||6|ARG|5|NumWeeks|INT||7|	12/04/2019 12:01:38
 Message sent to 10.192.45.108	12/04/2019 12:02:57
 DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||engineer|ARG|2|HoursWorked|FLOAT||33.8|ARG|3|PayRate|FLOAT||55.6|ARG|4|PiecesMade|INT||6|ARG|5|NumWeeks|INT||7|	12/04/2019 12:02:57
+Query message sent to registry: 	12/04/2019 12:51:46
+DRC|QUERY-SERVICE|jTeam|1189|SRV|PAYROLL||||||	12/04/2019 12:51:46
+Message received from registry: 	12/04/2019 12:51:46
+SOA|OK|||8|SRV|jTeam|PAYxMExTHExMONEY||5|1|WE calculate how much money you made|ARG|1|EmployeeType|STRING|mandatory||ARG|2|HoursWorked|FLOAT|mandatory||ARG|3|PayRate|FLOAT|mandatory||ARG|4|PiecesMade|INT|optional||ARG|5|NumWeeks|INT|optional||RSP|1|amount|FLOAT||MCH|10.192.45.108|50544|
+	12/04/2019 12:51:46
+Query message sent to registry: 	12/04/2019 12:51:46
+DRC|QUERY-SERVICE|jTeam|1189|SRV|PAYROLL||||||	12/04/2019 12:51:46
+Message received from registry: 	12/04/2019 12:51:46
+SOA|OK|||8|SRV|jTeam|PAYxMExTHExMONEY||5|1|WE calculate how much money you made|ARG|1|EmployeeType|STRING|mandatory||ARG|2|HoursWorked|FLOAT|mandatory||ARG|3|PayRate|FLOAT|mandatory||ARG|4|PiecesMade|INT|optional||ARG|5|NumWeeks|INT|optional||RSP|1|amount|FLOAT||MCH|10.192.45.108|50544|
+	12/04/2019 12:51:46
+Message sent to 10.192.45.108	12/04/2019 12:52:24
+DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||HOUR|ARG|2|HoursWorked|FLOAT||33.7|ARG|3|PayRate|FLOAT||22.4|ARG|4|PiecesMade|INT||9|ARG|5|NumWeeks|INT||3|	12/04/2019 12:52:24
+Message sent to 10.192.45.108	12/04/2019 12:53:39
+DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||HOUR|ARG|2|HoursWorked|FLOAT||33.7|ARG|3|PayRate|FLOAT||22.4|ARG|4|PiecesMade|INT||9|ARG|5|NumWeeks|INT||3|	12/04/2019 12:53:39
+Message sent to 10.192.45.108	12/04/2019 12:55:42
+DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||HOUR|ARG|2|HoursWorked|FLOAT||33.7|ARG|3|PayRate|FLOAT||22.4|ARG|4|PiecesMade|INT||9|ARG|5|NumWeeks|INT||3|	12/04/2019 12:55:42
+Message sent to 10.192.45.108	12/04/2019 12:57:13
+DRC|EXEC-SERVICE|jTeam|1189|SRV||PAYxMExTHExMONEY||5|||ARG|1|EmployeeType|STRING||HOUR|ARG|2|HoursWorked|FLOAT||33.7|ARG|3|PayRate|FLOAT||22.4|ARG|4|PiecesMade|INT||9|ARG|5|NumWeeks|INT||3|	12/04/2019 12:57:13
+Query message sent to registry: 	12/04/2019 13:01:01
+DRC|QUERY-SERVICE|jTeam|1189|SRV|PAYROLL||||||	12/04/2019 13:01:01
+Message received from registry: 	12/04/2019 13:01:01
+SOA|OK|||8|SRV|jTeam|PAYxMExTHExMONEY||5|1|WE calculate how much money you made|ARG|1|EmployeeType|STRING|mandatory||ARG|2|HoursWorked|FLOAT|mandatory||ARG|3|PayRate|FLOAT|mandatory||ARG|4|PiecesMade|INT|optional||ARG|5|NumWeeks|INT|optional||RSP|1|amount|FLOAT||MCH|10.192.45.108|50544|
+	12/04/2019 13:01:01

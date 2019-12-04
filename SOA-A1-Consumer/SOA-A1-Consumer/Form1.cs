@@ -22,7 +22,7 @@ namespace SOA_A1_Consumer
         Socket soa_socket;    //socket to communicate with registry
         Socket service_socket; //socket to communicate with service machine
         bool regOrUnreg = true;  //flag to change the register button to unregister after the user has clicked it, true represents register, false represents unregister
-        int teamID = 1189;  //TEAM ID assigned after registration
+        int teamID = 0;  //TEAM ID assigned after registration
         string serviceTeamName = "";    //the team who's service that the user is calling's team name
         string servicePort = ""; //port of the service machine
         string serviceIP = "";  //ip of the service machine
@@ -191,6 +191,12 @@ namespace SOA_A1_Consumer
             String ip_addr = Reg_IP.Text;
             String s_port = portText.Text;
 
+            if(Reg_IP.Text == "" || portText.Text == "")
+            {
+                MessageBox.Show("Please enter the IP and/or port of the registry");
+                return;
+            }
+
             int port = System.Convert.ToInt32(s_port, 10);
             System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
             System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
@@ -222,6 +228,13 @@ namespace SOA_A1_Consumer
                 MessageBox.Show("Service not selected");
                 return;
             }
+
+            if(teamName.Text == "" || teamID == 0)
+            {
+                MessageBox.Show(" Your team is not registered");
+                return;
+            }
+
 
             try
             {
@@ -396,6 +409,8 @@ namespace SOA_A1_Consumer
                         responseMsg.Text = exeRespData;
                     }
                     responseMsg.Text = exeRespData;
+                    Logging("Message received from published service: ");
+                    Logging(exeRespData);
                     service_socket.Disconnect(false);
 
                 }
