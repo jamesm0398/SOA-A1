@@ -25,13 +25,29 @@ namespace SOA_A1_GIORP
         public Socket giorpSocketWorker;                //socket for sending messages back to the teams
         public Socket registerSocket;                   //socket for communicating with registry
         public AsyncCallback pfnWorkerCallBack;
-        int teamID = 0;
+       
         string giorpResponse = "";
         char fs = (char)28; //file seperator char
 
         public Form1()
         {
             InitializeComponent();
+        }
+
+
+        public void Logging(string log)
+        {
+            string filename = @"SOAGIORPServiceLogging.txt";
+            DateTime date = DateTime.Now;
+            string logtext = $"{log}\t{date.ToString("MM/dd/yyyy HH:mm:ss")}" + Environment.NewLine;
+
+            if (!File.Exists(filename))
+            {
+                File.Create(filename);
+                File.AppendAllText(filename, "--GIORP APP LOG-- \n Team: jTeam (James M, John H");
+            }
+
+            File.AppendAllText(filename, logtext);
         }
 
         //Form1_Load
@@ -133,7 +149,7 @@ namespace SOA_A1_GIORP
 
                 try
                 {
-                    Object queryObj = "\vDRC|QUERY-TEAM|Chaos|" + teamIDText.Text + "|\r" +
+                    Object queryObj = "\vDRC|QUERY-TEAM|"+teamName.Text+ "|" + teamIDText.Text + "|\r" +
                                         "INF|" + queryTeamName + "|" + queryTeamID + "|GIORP-TOTAL|\r" + fs + "\r";
                     byte[] queryBytes = Encoding.ASCII.GetBytes(queryObj.ToString());
                     registerSocket.Send(queryBytes);
@@ -215,77 +231,7 @@ namespace SOA_A1_GIORP
         //Returns: none
         private void regTeam_Click(object sender, EventArgs e)
         {
-            //attempt to connect to the registry IP
-            try
-            {
-                registerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                String ip_addr = regIP.Text;
-                String s_port = "3245";
-
-                int port = System.Convert.ToInt16(s_port, 10);
-                System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
-                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
-                registerSocket.Connect(remoteEndPoint);
-            }
-
-            catch (System.Net.Sockets.SocketException se)
-            {
-                MessageBox.Show(se.Message);
-            }
-
-            //attempt to send team name to registry
-            try
-            {
-                Object regData;
-
-             
-                regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + fs + "\r";
-                
-                
-
-
-                byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
-                registerSocket.Send(byteData);
-            }
-
-            catch (System.Net.Sockets.SocketException se)
-            {
-                MessageBox.Show(se.Message);
-            }
-
-            //received message from registry
-            try
-            {
-                byte[] buffer = new byte[1024];
-                int iRx = registerSocket.Receive(buffer);
-                char[] chars = new char[iRx];
-
-                Decoder d = Encoding.UTF8.GetDecoder();
-                int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
-                String szData = new System.String(chars);
-               
-                if(!(szData.Contains("NOT")))
-                {
-
-                    string[] dataParts = szData.Split('|');
-                    teamID = int.Parse(dataParts[2]);
-
-                    BeginListening();
-                    //log message
-                }
-
-                else
-                {
-                    MessageBox.Show("Error: " + szData);
-                    //log message
-                }
-                
-            }
-
-            catch (System.Net.Sockets.SocketException se)
-            {
-                MessageBox.Show(se.Message);
-            }
+            
         }
 
 
@@ -344,7 +290,7 @@ namespace SOA_A1_GIORP
             {
                 Object data;
 
-                data = "\vDRC|PUB-SERVICE|Chaos|" + teamID + "|\r" +
+                data = "\vDRC|PUB-SERVICE|jTeam|" + teamIDText.Text + "|\r" +
                     "SRV|GIORP-TOTAL|GIORPPurchaseTotalizer|2|2|5|Service to calculate tax amounts for a purchase\r" +
                     "ARG|1|province|string|mandatory||\r" +
                     "ARG|2|purchaseAmount|double|mandatory||\r" +
@@ -512,12 +458,12 @@ namespace SOA_A1_GIORP
         //Close/shutdown all sockets before exiting
         public void OnProcessExit(object sender, EventArgs e)
         {
-            giorpSocketListener.Shutdown(SocketShutdown.Both);
-            giorpSocketWorker.Shutdown(SocketShutdown.Both);
-            registerSocket.Shutdown(SocketShutdown.Both);
-            giorpSocketListener.Close();
-            giorpSocketWorker.Close();
-            registerSocket.Close();
+            //giorpSocketListener.Shutdown(SocketShutdown.Both);
+            //giorpSocketWorker.Shutdown(SocketShutdown.Both);
+            //registerSocket.Shutdown(SocketShutdown.Both);
+            //giorpSocketListener.Close();
+            //giorpSocketWorker.Close();
+            //registerSocket.Close();
         }
     }
 }

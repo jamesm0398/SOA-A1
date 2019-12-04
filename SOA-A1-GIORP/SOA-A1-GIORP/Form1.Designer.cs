@@ -107,9 +107,9 @@
             this.teamName.AutoSize = true;
             this.teamName.Location = new System.Drawing.Point(120, 130);
             this.teamName.Name = "teamName";
-            this.teamName.Size = new System.Drawing.Size(37, 13);
+            this.teamName.Size = new System.Drawing.Size(36, 13);
             this.teamName.TabIndex = 8;
-            this.teamName.Text = "Chaos";
+            this.teamName.Text = "jTeam";
             // 
             // label4
             // 
