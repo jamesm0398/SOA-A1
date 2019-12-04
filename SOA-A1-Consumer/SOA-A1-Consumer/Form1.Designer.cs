@@ -51,6 +51,9 @@
             this.param3 = new System.Windows.Forms.TextBox();
             this.param4 = new System.Windows.Forms.TextBox();
             this.param5 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.portText = new System.Windows.Forms.TextBox();
+            this.unreg = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -167,9 +170,9 @@
             this.teamName.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.teamName.Location = new System.Drawing.Point(600, 198);
             this.teamName.Name = "teamName";
-            this.teamName.Size = new System.Drawing.Size(49, 19);
+            this.teamName.Size = new System.Drawing.Size(48, 19);
             this.teamName.TabIndex = 11;
-            this.teamName.Text = "Chaos";
+            this.teamName.Text = "jTeam";
             // 
             // query
             // 
@@ -266,12 +269,42 @@
             this.param5.Size = new System.Drawing.Size(100, 20);
             this.param5.TabIndex = 22;
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label12.Location = new System.Drawing.Point(460, 268);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(96, 19);
+            this.label12.TabIndex = 23;
+            this.label12.Text = "Registry port:";
+            // 
+            // portText
+            // 
+            this.portText.Location = new System.Drawing.Point(604, 272);
+            this.portText.Name = "portText";
+            this.portText.Size = new System.Drawing.Size(100, 20);
+            this.portText.TabIndex = 24;
+            // 
+            // unreg
+            // 
+            this.unreg.Location = new System.Drawing.Point(464, 350);
+            this.unreg.Name = "unreg";
+            this.unreg.Size = new System.Drawing.Size(75, 23);
+            this.unreg.TabIndex = 25;
+            this.unreg.Text = "Unregister";
+            this.unreg.UseVisualStyleBackColor = true;
+            this.unreg.Click += new System.EventHandler(this.unreg_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.unreg);
+            this.Controls.Add(this.portText);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.param5);
             this.Controls.Add(this.param4);
             this.Controls.Add(this.param3);
@@ -328,6 +361,9 @@
         private System.Windows.Forms.TextBox param3;
         private System.Windows.Forms.TextBox param4;
         private System.Windows.Forms.TextBox param5;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox portText;
+        private System.Windows.Forms.Button unreg;
     }
 }
 

@@ -22,7 +22,7 @@ namespace SOA_A1_Consumer
         Socket soa_socket;    //socket to communicate with registry
         Socket service_socket; //socket to communicate with service machine
         bool regOrUnreg = true;  //flag to change the register button to unregister after the user has clicked it, true represents register, false represents unregister
-        int teamID = 0;  //TEAM ID assigned after registration
+        int teamID = 1189;  //TEAM ID assigned after registration
         string serviceTeamName = "";    //the team who's service that the user is calling's team name
         string servicePort = ""; //port of the service machine
         string serviceIP = "";  //ip of the service machine
@@ -30,6 +30,7 @@ namespace SOA_A1_Consumer
         int numArgs = 0;          //number of arguments in the service, retreived from query msg
         string[] serviceArgs = new string[5];   //the actual arguments needed for the service
         string[] serviceArgDataTypes = new string[5];   //the data types of the arguments needed
+        char fs = (char)28;
 
         public Form1()
         {
@@ -38,6 +39,20 @@ namespace SOA_A1_Consumer
         }
 
 
+        public void Logging(string log)
+        {
+            string filename = @"SOAConsumerLogging.txt";
+            DateTime date = DateTime.Now;
+            string logtext = $"{log}\t{date.ToString("MM/dd/yyyy HH:mm:ss")}" + Environment.NewLine;
+
+            if (!File.Exists(filename))
+            {
+                File.Create(filename);
+                File.AppendAllText(filename, "--USER APP LOG-- \n Team: Chaos (James M, John H");
+            }
+
+            File.AppendAllText(filename, logtext);
+        }
      
 
         //Register_Click
@@ -50,38 +65,23 @@ namespace SOA_A1_Consumer
             //attempt to connect to the registry IP
             try
             {
-                //soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                //String ip_addr = Reg_IP.Text;
-                //String s_port = "3128";
+                soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                String ip_addr = Reg_IP.Text;
+                String s_port = portText.Text;
 
-                //int port = System.Convert.ToInt32(s_port, 10);
-                //System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
-                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
-                //soa_socket.ReceiveTimeout = 10000;
-                //soa_socket.Connect(remoteEndPoint);
+                int port = System.Convert.ToInt32(s_port, 10);
+                System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+                soa_socket.ReceiveTimeout = 10000;
+                soa_socket.Connect(remoteEndPoint);
 
-                //if(soa_socket.Connected)
-                //{
-                //    responseMsg.Text = "Connected";
-                //}
-
-
-                TcpClient client = new TcpClient(Reg_IP.Text, 3128);
-                NetworkStream stream = client.GetStream();
-                string data = "DRC|REG-TEAM |||\rINF | " + teamName.Text + " |||\r";
-                string response = "";
-
-                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes(data);
-
-                stream.Write(bytesToSend, 0, bytesToSend.Length);
+                if (soa_socket.Connected)
+                {
+                    responseMsg.Text = "Connected";
+                }
 
 
-                byte[] bytesRead = new byte[client.ReceiveBufferSize];
-                int bytesR = stream.Read(bytesRead, 0, client.ReceiveBufferSize);
-                response = Encoding.ASCII.GetString(bytesRead, 0, bytesRead.Length);
-                response = response.Replace("\0","");
-                responseMsg.Text = response;
-
+               
 
             }
 
@@ -91,71 +91,90 @@ namespace SOA_A1_Consumer
             }
 
             //attempt to send team name to registry
-            //try
-            //{
-            //    Object regData = "this is a test";
-
-
-            //    //if(regOrUnreg == true)
-            //    //{
-            //    //   regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r";
-            //    //}
-            //    //else
-            //    //{
-            //    //   regData = "DRC|UNREG-TEAM|"+teamName.Text+"|"+teamID+"|\r"  + "\r";
-            //    //}
-
+            try
+                
+            {
+                Object regData = "";
+                
+                if(regOrUnreg == true)
+                {
+                     regData = "\vDRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + fs + "\r";
+                }
                
-            //    byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
-            //    soa_socket.Send(byteData);
-            //    soa_socket.Shutdown(SocketShutdown.Both);
-            //   // soa_socket.Close();
-            //}
+                else
+                {
+                    regData = "\vDRC|UNREG-TEAM|" + teamName.Text + "|" + teamID + "|\r" + fs + "\r";
+                }
 
-            //catch (System.Net.Sockets.SocketException se)
-            //{
-            //    MessageBox.Show(se.Message);
-            //}
+
+              
+
+                byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
+                soa_socket.Send(byteData);
+                Logging("Calling SOA-Registry with message:");
+                Logging(regData.ToString());
+
+
+                
+                // soa_socket.Close();
+            }
+
+            catch (System.Net.Sockets.SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
 
             ////received message from registry
-            //try
-            //{
-            //    soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-            //    String ip_addr = Reg_IP.Text;
-            //    String s_port = "3128";
-
-            //    int port = System.Convert.ToInt32(s_port, 10);
-            //    System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
-            //    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
-            //    soa_socket.ReceiveTimeout = 10000;
-            //    soa_socket.Connect(remoteEndPoint);
-            //    byte[] buffer = new byte[1024];
-            //    int iRx = soa_socket.Receive(buffer);
-            //    char[] chars = new char[iRx];
-
-            //    System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
-            //    int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
-            //    String szData = new System.String(chars);
-            //    responseMsg.Text = szData;
-            //    soa_socket.Shutdown(SocketShutdown.Both);
-
-            //}
-
-            //catch (System.Net.Sockets.SocketException se)
-            //{
-            //    MessageBox.Show(se.Message);
-            //}
-
-            regOrUnreg = false;
-            if(regOrUnreg == false)
+            try
             {
-                register.Text = "Unregister";
+                //soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                //String ip_addr = Reg_IP.Text;
+                //String s_port = "3128";
+
+                //int port = System.Convert.ToInt32(s_port, 10);
+                //System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+                //soa_socket.ReceiveTimeout = 10000;
+                //soa_socket.Connect(remoteEndPoint);
+                byte[] buffer = new byte[1024];
+                int iRx = soa_socket.Receive(buffer);
+                char[] chars = new char[iRx];
+
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
+                String szData = new System.String(chars);
+                responseMsg.Text = szData;
+
+                if (!(szData.Contains("NOT")))
+                {
+                    string[] respParts = szData.Split('|');
+                    teamID = Convert.ToInt32(respParts[2]);
+                }
+
+                Logging("Response from SOA-Registry:");
+                Logging(szData);
+                soa_socket.Shutdown(SocketShutdown.Both);
+                soa_socket.Disconnect(false);
+
             }
 
-            else
+            catch (System.Net.Sockets.SocketException se)
             {
-                register.Text = "Register";
+                MessageBox.Show(se.Message);
             }
+
+            //regOrUnreg = false;
+            //if(regOrUnreg == false)
+            //{
+            //    register.Text = "Unregister";
+            //    regOrUnreg = true;
+            //}
+
+            //else
+            //{
+            //    register.Text = "Register";
+            //    regOrUnreg = false;
+            //}
            
 
         }
@@ -168,22 +187,32 @@ namespace SOA_A1_Consumer
         {
             string tag_name = "";
 
-            if(serviceList.SelectedIndex == 0)
+            soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+            String ip_addr = Reg_IP.Text;
+            String s_port = portText.Text;
+
+            int port = System.Convert.ToInt32(s_port, 10);
+            System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+            System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+            soa_socket.ReceiveTimeout = 10000;
+            soa_socket.Connect(remoteEndPoint);
+
+            if (serviceList.SelectedItem.ToString() == "GIORP-5000 Purchase Totalizer")
             {
                 tag_name = "GIORP-TOTAL";
             }
 
-            if (serviceList.SelectedIndex == 1)
+           else if (serviceList.SelectedItem.ToString() == "Pay Stub Generator")
             {
                 tag_name = "PAYROLL";
             }
 
-            if (serviceList.SelectedIndex == 2)
+           else if (serviceList.SelectedItem.ToString() == "Car Loan Calculator")
             {
                 tag_name = "CAR-LOAN";
             }
 
-            if (serviceList.SelectedIndex == 3)
+            else if (serviceList.SelectedItem.ToString() == "Canadian Postal Code Validator")
             {
                 tag_name = "POSTAL";
             }
@@ -197,10 +226,13 @@ namespace SOA_A1_Consumer
             try
             {
                 Object queryData;
-                queryData = "\vDRC|QUERY-SERVICE|" + teamName + "|" + teamID + "|\r" +
-                    "SRV|" + tag_name + "||||||" + "\r" + Path.DirectorySeparatorChar + "\r";
+                queryData = "\vDRC|QUERY-SERVICE|" + teamName.Text + "|" + teamID + "|\r" +
+                    "SRV|" + tag_name + "||||||" + "\r" + fs + "\r";
                 byte[] queryBytes = Encoding.ASCII.GetBytes(queryData.ToString());
                 soa_socket.Send(queryBytes);
+                Logging("Query message sent to registry: ");
+                Logging(queryData.ToString());
+                
 
             }
 
@@ -223,9 +255,9 @@ namespace SOA_A1_Consumer
                     string[] queryParts = qszData.Split('|');
                     serviceTeamName = queryParts[6];
                     serviceName = queryParts[7];
-                    numArgs = Convert.ToInt32(queryParts[8]);
-                    int argStart = 13;
-                    int argDataTypeStart = 14;
+                    numArgs = Convert.ToInt32(queryParts[9]);
+                    int argStart = 14;
+                    int argDataTypeStart = 15;
                     //get argument name and their data type for as many arguments are returned
                     for(int i = 0; i<numArgs;i++)
                     {
@@ -238,9 +270,12 @@ namespace SOA_A1_Consumer
                     
                     string[] getMCH = qszData.Split(new[] { "MCH" }, StringSplitOptions.None);
                     string[] mchParts = getMCH[1].Split('|');
-                    serviceIP = mchParts[0];
-                    servicePort = mchParts[1];
+                    serviceIP = mchParts[1];
+                    servicePort = mchParts[2];
                     responseMsg.Text = qszData;
+                    Logging("Message received from registry: ");
+                    Logging(qszData);
+                    soa_socket.Disconnect(false);
 
                 }
 
@@ -279,9 +314,10 @@ namespace SOA_A1_Consumer
                 try
                 {
                     service_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                    int servPort = System.Convert.ToInt16(servicePort, 10);
+                    int servPort = System.Convert.ToInt32(servicePort, 10);
                     System.Net.IPAddress servIP = System.Net.IPAddress.Parse(serviceIP);
                     System.Net.IPEndPoint servEndPoint = new System.Net.IPEndPoint(servIP, servPort);
+                    service_socket.ReceiveTimeout = 4000;
                     service_socket.Connect(servEndPoint);
                 }
 
@@ -292,48 +328,52 @@ namespace SOA_A1_Consumer
 
                 try
                 {
-                    Object execData;
+                    Object execData = "";
                     
                     //build exec message based on how many arguments are needed
                     if(numArgs == 2)
                     {
-                        execData = "\vDRC|EXEC-SERVICE|" + teamName + "|" + teamID + "|\r" +
+                        execData = "\vDRC|EXEC-SERVICE|" + teamName.Text + "|" + teamID + "|\r" +
                             "SRV||" + serviceName + "||2|||\r" +
-                            "ARG|1" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
-                            "ARG|2" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" + Path.DirectorySeparatorChar + "\r";
+                            "ARG|1|" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
+                            "ARG|2|" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" + fs + "\r";
 
                     }
 
                    if(numArgs ==3)
                     {
-                        execData = "\vDRC|EXEC-SERVICE|" + teamName + "|" + teamID + "|\r" +
+                        execData = "\vDRC|EXEC-SERVICE|" + teamName.Text + "|" + teamID + "|\r" +
                            "SRV||" + serviceName + "||3|||\r" +
-                           "ARG|1" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
-                           "ARG|2" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
-                           "ARG|3" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" + Path.DirectorySeparatorChar + "\r";
+                           "ARG|1|" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
+                           "ARG|2|" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
+                           "ARG|3|" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" + fs + "\r";
                     }
 
                     if (numArgs ==4)
                     {
-                        execData = "\vDRC|EXEC-SERVICE|" + teamName + "|" + teamID + "|\r" +
+                        execData = "\vDRC|EXEC-SERVICE|" + teamName.Text + "|" + teamID + "|\r" +
                           "SRV||" + serviceName + "||4|||\r" +
-                          "ARG|1" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
-                          "ARG|2" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
-                          "ARG|3" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" +
-                          "ARG|4" + serviceArgs[3] + "|" + serviceArgDataTypes[3] + "||" + param4.Text + "|\r" + Path.DirectorySeparatorChar + "\r";
+                          "ARG|1|" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
+                          "ARG|2|" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
+                          "ARG|3|" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" +
+                          "ARG|4|" + serviceArgs[3] + "|" + serviceArgDataTypes[3] + "||" + param4.Text + "|\r" + fs + "\r";
                     }
 
                     if (numArgs == 5)
                     {
-                        execData = "\vDRC|EXEC-SERVICE|" + teamName + "|" + teamID + "|\r" +
+                        execData = "\vDRC|EXEC-SERVICE|" + teamName.Text + "|" + teamID + "|\r" +
                          "SRV||" + serviceName + "||5|||\r" +
-                         "ARG|1" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
-                         "ARG|2" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
-                         "ARG|3" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" +
-                         "ARG|4" + serviceArgs[3] + "|" + serviceArgDataTypes[3] + "||" + param4.Text + "|\r" +
-                         "ARG|5" + serviceArgs[4] + "|" + serviceArgDataTypes[4] + "||" + param5.Text + "|\r" + Path.DirectorySeparatorChar + "\r";
+                         "ARG|1|" + serviceArgs[0] + "|" + serviceArgDataTypes[0] + "||" + param1.Text + "|\r" +
+                         "ARG|2|" + serviceArgs[1] + "|" + serviceArgDataTypes[1] + "||" + param2.Text + "|\r" +
+                         "ARG|3|" + serviceArgs[2] + "|" + serviceArgDataTypes[2] + "||" + param3.Text + "|\r" +
+                         "ARG|4|" + serviceArgs[3] + "|" + serviceArgDataTypes[3] + "||" + param4.Text + "|\r" +
+                         "ARG|5|" + serviceArgs[4] + "|" + serviceArgDataTypes[4] + "||" + param5.Text + "|\r" + fs + "\r";
                     }
-
+                    byte[] byteData = System.Text.Encoding.ASCII.GetBytes(execData.ToString());
+                    service_socket.Send(byteData);
+                    Logging("Message sent to " + serviceIP);
+                    Logging(execData.ToString());
+                   
                 }
 
                 catch (SocketException se)
@@ -356,6 +396,7 @@ namespace SOA_A1_Consumer
                         responseMsg.Text = exeRespData;
                     }
                     responseMsg.Text = exeRespData;
+                    service_socket.Disconnect(false);
 
                 }
 
@@ -371,10 +412,90 @@ namespace SOA_A1_Consumer
         {
            
            // soa_socket.Shutdown(SocketShutdown.Both);
-            soa_socket.Close();
+            //soa_socket.Close();
           //  service_socket.Shutdown(SocketShutdown.Both);
            // service_socket.Close();
          
+        }
+
+        private void unreg_Click(object sender, EventArgs e)
+        {
+            //attempt to connect to the registry IP
+            try
+            {
+                soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                String ip_addr = Reg_IP.Text;
+                String s_port = portText.Text;
+
+                int port = System.Convert.ToInt32(s_port, 10);
+                System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
+                System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
+                soa_socket.ReceiveTimeout = 10000;
+                soa_socket.Connect(remoteEndPoint);
+
+                if (soa_socket.Connected)
+                {
+                    responseMsg.Text = "Connected";
+                }
+
+
+
+
+            }
+
+            catch (System.Net.Sockets.SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
+
+            //attempt to send team name to registry
+            try
+
+            {
+                Object regData = "\vDRC|UNREG-TEAM|" + teamName.Text + "|" + teamID + "|\r" + fs + "\r";
+
+              
+                byte[] byteData = System.Text.Encoding.ASCII.GetBytes(regData.ToString());
+                soa_socket.Send(byteData);
+                Logging("Calling SOA-Registry with message:");
+                Logging(regData.ToString());
+
+
+
+                // soa_socket.Close();
+            }
+
+            catch (System.Net.Sockets.SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
+
+            ////received message from registry
+            try
+            {
+               
+                byte[] buffer = new byte[1024];
+                int iRx = soa_socket.Receive(buffer);
+                char[] chars = new char[iRx];
+
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
+                String szData = new System.String(chars);
+                responseMsg.Text = szData;
+
+             
+
+                Logging("Response from SOA-Registry:");
+                Logging(szData);
+                soa_socket.Shutdown(SocketShutdown.Both);
+                soa_socket.Disconnect(false);
+
+            }
+
+            catch (System.Net.Sockets.SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
         }
     }
 }

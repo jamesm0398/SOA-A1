@@ -27,6 +27,7 @@ namespace SOA_A1_GIORP
         public AsyncCallback pfnWorkerCallBack;
         int teamID = 0;
         string giorpResponse = "";
+        char fs = (char)28; //file seperator char
 
         public Form1()
         {
@@ -39,6 +40,7 @@ namespace SOA_A1_GIORP
         //Returns: none
         private void Form1_Load(object sender, EventArgs e)
         {
+            BeginListening();
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
         }
 
@@ -131,8 +133,8 @@ namespace SOA_A1_GIORP
 
                 try
                 {
-                    Object queryObj = "\vDRC|QUERY-TEAM|Chaos|" + teamID + "|\r" +
-                                        "INF|" + queryTeamName + "|" + queryTeamID + "|GIORP-TOTAL|\r" + Path.DirectorySeparatorChar + "\r";
+                    Object queryObj = "\vDRC|QUERY-TEAM|Chaos|" + teamIDText.Text + "|\r" +
+                                        "INF|" + queryTeamName + "|" + queryTeamID + "|GIORP-TOTAL|\r" + fs + "\r";
                     byte[] queryBytes = Encoding.ASCII.GetBytes(queryObj.ToString());
                     registerSocket.Send(queryBytes);
                 }
@@ -159,7 +161,7 @@ namespace SOA_A1_GIORP
                     else
                     {
                         errorCode = 4;
-                        giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Your team has insufficient permissions to use this service||\r" + Path.DirectorySeparatorChar + "\r";
+                        giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Your team has insufficient permissions to use this service||\r" + fs + "\r";
                     }
                 }
 
@@ -177,7 +179,7 @@ namespace SOA_A1_GIORP
                 else
                 {
                     errorCode = 3;
-                    giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Purchase amount not a double||\r" + Path.DirectorySeparatorChar + "\r";
+                    giorpResponse = "\vPUB|NOT-OK|" + errorCode + "|Purchase amount not a double||\r" + fs + "\r";
                 }
                 
                 //try to send response message
@@ -237,7 +239,7 @@ namespace SOA_A1_GIORP
                 Object regData;
 
              
-                regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + Path.DirectorySeparatorChar + "\r";
+                regData = "DRC|REG-TEAM|||\rINF|" + teamName.Text + "|||\r" + fs + "\r";
                 
                 
 
@@ -297,7 +299,7 @@ namespace SOA_A1_GIORP
             {
                 //create the listening socket...
                 giorpSocketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint ipLocal = new IPEndPoint(IPAddress.Any, 3245);
+                IPEndPoint ipLocal = new IPEndPoint(IPAddress.Any, Convert.ToInt32(pubPortText.Text));
                 //bind to local IP Address...
                 giorpSocketListener.Bind(ipLocal);
                 //start listening...
@@ -322,14 +324,16 @@ namespace SOA_A1_GIORP
             try
             {
                 //create a new client socket ...
-                giorpSocketWorker = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                String szIPSelected = regIP.Text;
-                String szPort = "3245";
-                int alPort = System.Convert.ToInt16(szPort, 10);
-
-                IPAddress remoteIPAddress = System.Net.IPAddress.Parse(szIPSelected);
-                IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddress, alPort);
-                giorpSocketWorker.Connect(remoteEndPoint);
+                registerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
+                String szIPSelected = pubIPText.Text;
+                String szPort = pubIPText.Text;
+                int alPort = System.Convert.ToInt32(szPort, 10);
+                String regIp = regIP.Text;
+                String regPort = regPortTxt.Text;
+                int registryPort = Convert.ToInt32(regPort, 10);
+                IPAddress remoteIPAddress = System.Net.IPAddress.Parse(regIp);
+                IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddress, registryPort);
+                registerSocket.Connect(remoteEndPoint);
             }
             catch (System.Net.Sockets.SocketException se)
             {
@@ -349,10 +353,10 @@ namespace SOA_A1_GIORP
                     "RSP|3|HSTAmount|double||\r" +
                     "RSP|4|GSTAmount|double||\r" +
                     "RSP|5|TotalAmount|double||\r" +
-                    "MCH|" + regIP.Text + "|3245|\r" + Path.DirectorySeparatorChar + "\r";
+                    "MCH|" + pubIPText.Text + "|"+ pubPortText.Text + "|\r" + fs + "\r";
 
                 byte[] byteData = Encoding.ASCII.GetBytes(data.ToString());
-                giorpSocketWorker.Send(byteData);
+                registerSocket.Send(byteData);
             }
 
             catch (System.Net.Sockets.SocketException se)
@@ -364,13 +368,15 @@ namespace SOA_A1_GIORP
             try
             {
                 byte[] buffer = new byte[1024];
-                int iRx = giorpSocketWorker.Receive(buffer);
+                int iRx = registerSocket.Receive(buffer);
                 char[] chars = new char[iRx];
 
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int charLen = d.GetChars(buffer, 0, iRx, chars, 0);
                 String szData = new System.String(chars);
                 regResponse.Text = szData;
+
+                registerSocket.Disconnect(false);
             }
 
             catch (System.Net.Sockets.SocketException se)
@@ -491,12 +497,12 @@ namespace SOA_A1_GIORP
                     "RSP|2|pstAmount|double|" + pstAdded + "|\r" +
                     "RSP|3|pstAmount|double|" + hstAdded + "|\r" +
                     "RSP|4|pstAmount|double|" + gstAdded + "|\r" +
-                    "RSP|5|pstAmount|double|" + totalPrice + "|\r" + Path.DirectorySeparatorChar + "\r";
+                    "RSP|5|pstAmount|double|" + totalPrice + "|\r" + fs + "\r";
             }
 
             else
             {
-                respString = "\vPUB|NOT-OK|" + errorCode + "|" + errorMsg + "||\r" + Path.DirectorySeparatorChar + "\r";
+                respString = "\vPUB|NOT-OK|" + errorCode + "|" + errorMsg + "||\r" + fs + "\r";
 
             }
 
