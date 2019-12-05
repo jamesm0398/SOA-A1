@@ -1,0 +1,10 @@
+DRC|PUB-SERVICE|jTeam|1189|
+SRV|GIORP-TOTAL|GIORPPurchaseTotalizer|2|2|5|Service to calculate tax amounts for a purchase
+ARG|1|province|string|mandatory||
+ARG|2|purchaseAmount|double|mandatory||
+RSP|1|SubTotal|double||
+RSP|2|PSTAmount|double||
+RSP|3|HSTAmount|double||
+RSP|4|GSTAmount|double||
+RSP|5|TotalAmount|double||
+MCH|127.0.0.1|47888|
