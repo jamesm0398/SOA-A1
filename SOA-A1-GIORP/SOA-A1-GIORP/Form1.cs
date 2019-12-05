@@ -325,7 +325,7 @@ namespace SOA_A1_GIORP
                     "RSP|3|HSTAmount|double||\r" +
                     "RSP|4|GSTAmount|double||\r" +
                     "RSP|5|TotalAmount|double||\r" +
-                    "MCH|" + pubIPText.Text + "|47888|\r" + fs + "\r";
+                    "MCH|" + pubIPText.Text + "|"+teamIDText.Text+ "|\r" + fs + "\r";
 
                 byte[] byteData = Encoding.ASCII.GetBytes(data.ToString());
                 registerSocket.Send(byteData);
