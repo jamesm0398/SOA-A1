@@ -22,7 +22,9 @@ namespace SOA_A1_GIORP
     public partial class Form1 : Form
     {
         public Socket giorpSocketListener;              //socket for listening for messages from other teams
+        public TcpListener giorpListener;
         public Socket giorpSocketWorker;                //socket for sending messages back to the teams
+        public TcpClient giorpClient;
         public Socket registerSocket;                   //socket for communicating with registry
         public AsyncCallback pfnWorkerCallBack;
        
@@ -32,9 +34,14 @@ namespace SOA_A1_GIORP
         public Form1()
         {
             InitializeComponent();
+           
+
         }
 
-
+        //Logging function
+        //Log messages to the log file
+        //Param: log: the text to add to the file
+        //Returns: none
         public void Logging(string log)
         {
             string filename = @"SOAGIORPServiceLogging.txt";
@@ -56,7 +63,7 @@ namespace SOA_A1_GIORP
         //Returns: none
         private void Form1_Load(object sender, EventArgs e)
         {
-            BeginListening();
+          
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
         }
 
@@ -69,7 +76,7 @@ namespace SOA_A1_GIORP
             try
             {
                 giorpSocketWorker = giorpSocketListener.EndAccept(asyn);
-                giorpSocketWorker.Close();
+                //giorpSocketWorker.Close();
                 WaitForData(giorpSocketWorker);
             }
             catch (ObjectDisposedException)
@@ -79,6 +86,7 @@ namespace SOA_A1_GIORP
             catch (SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
         }
@@ -111,6 +119,7 @@ namespace SOA_A1_GIORP
             catch (SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
         }
@@ -126,6 +135,7 @@ namespace SOA_A1_GIORP
                 CSocketPacket theSockId = (CSocketPacket)asyn.AsyncState;
                 //end receive...
                 int iRx = 0;
+            
                 iRx = theSockId.thisSocket.EndReceive(asyn);
                 char[] chars = new char[iRx + 1];
                 Decoder d = Encoding.UTF8.GetDecoder();
@@ -158,6 +168,7 @@ namespace SOA_A1_GIORP
                 catch (SocketException e)
                 {
                     MessageBox.Show(e.Message);
+                    Logging(e.Message);
                 }
 
                 try
@@ -204,11 +215,14 @@ namespace SOA_A1_GIORP
                     Object objResp = giorpResponse;
                     byte[] byResp = Encoding.ASCII.GetBytes(objResp.ToString());
                     giorpSocketWorker.Send(byResp);
+                    Logging("Sending response to client");
+                    Logging(giorpResponse);
                 }
                
                 catch(SocketException e)
                 {
                     MessageBox.Show(e.Message);
+                    Logging(e.Message);
                 }
 
 
@@ -222,6 +236,7 @@ namespace SOA_A1_GIORP
             catch (SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
         }
 
@@ -231,8 +246,7 @@ namespace SOA_A1_GIORP
         //Returns: none
         private void regTeam_Click(object sender, EventArgs e)
         {
-            
-        }
+                    }
 
 
         //BeginListening
@@ -241,23 +255,30 @@ namespace SOA_A1_GIORP
         //Returns: none
         public void BeginListening()
         {
+
+
+            String regIpL = "10.192.39.249";
+            IPAddress remoteIPAddressL = System.Net.IPAddress.Parse(regIpL);
+
+
             try
             {
                 //create the listening socket...
-                giorpSocketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint ipLocal = new IPEndPoint(IPAddress.Any, Convert.ToInt32(pubPortText.Text));
+                giorpSocketListener = new Socket(remoteIPAddressL.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ipLocal = new IPEndPoint(remoteIPAddressL, 47888);
                 //bind to local IP Address...
                 giorpSocketListener.Bind(ipLocal);
                 //start listening...
-                giorpSocketListener.Listen(4);
+                giorpSocketListener.Listen(100);
                 // create the call back for any client connections...
-                giorpSocketListener.BeginAccept(new AsyncCallback(OnClientConnect), null);
+                giorpSocketListener.BeginAccept(new AsyncCallback(OnClientConnect), giorpSocketListener);
                 //  cmdListen.Enabled = false;
 
             }
             catch (SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
         }
 
@@ -269,10 +290,15 @@ namespace SOA_A1_GIORP
         {
             try
             {
+
+
+
+
+
                 //create a new client socket ...
                 registerSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
                 String szIPSelected = pubIPText.Text;
-                String szPort = pubIPText.Text;
+                String szPort = pubPortText.Text;
                 int alPort = System.Convert.ToInt32(szPort, 10);
                 String regIp = regIP.Text;
                 String regPort = regPortTxt.Text;
@@ -299,20 +325,29 @@ namespace SOA_A1_GIORP
                     "RSP|3|HSTAmount|double||\r" +
                     "RSP|4|GSTAmount|double||\r" +
                     "RSP|5|TotalAmount|double||\r" +
-                    "MCH|" + pubIPText.Text + "|"+ pubPortText.Text + "|\r" + fs + "\r";
+                    "MCH|" + pubIPText.Text + "|47888|\r" + fs + "\r";
 
                 byte[] byteData = Encoding.ASCII.GetBytes(data.ToString());
                 registerSocket.Send(byteData);
+                registerSocket.Disconnect(false);
+                
+                Logging("Sending publish message to registry");
+                Logging(data.ToString());
+               
+             //  giorpSocketWorker.Disconnect(true);
             }
 
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
+            
             //received message from registry
             try
             {
+
                 byte[] buffer = new byte[1024];
                 int iRx = registerSocket.Receive(buffer);
                 char[] chars = new char[iRx];
@@ -323,11 +358,14 @@ namespace SOA_A1_GIORP
                 regResponse.Text = szData;
 
                 registerSocket.Disconnect(false);
+
+
             }
 
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
         }
 
@@ -451,6 +489,8 @@ namespace SOA_A1_GIORP
                 respString = "\vPUB|NOT-OK|" + errorCode + "|" + errorMsg + "||\r" + fs + "\r";
 
             }
+            Logging("Finished processing execute message");
+            Logging(respString);
 
             return respString;
         }
@@ -458,12 +498,33 @@ namespace SOA_A1_GIORP
         //Close/shutdown all sockets before exiting
         public void OnProcessExit(object sender, EventArgs e)
         {
-            //giorpSocketListener.Shutdown(SocketShutdown.Both);
-            //giorpSocketWorker.Shutdown(SocketShutdown.Both);
-            //registerSocket.Shutdown(SocketShutdown.Both);
-            //giorpSocketListener.Close();
-            //giorpSocketWorker.Close();
-            //registerSocket.Close();
+           
+        }
+
+        private void beginListen_Click(object sender, EventArgs e)
+        {
+            String regIpL = pubIPText.Text;
+            IPAddress remoteIPAddressL = System.Net.IPAddress.Parse(regIpL);
+
+
+            try
+            {
+                //create the listening socket...
+                giorpSocketListener = new Socket(remoteIPAddressL.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint ipLocal = new IPEndPoint(remoteIPAddressL, Convert.ToInt32(pubPortText.Text));
+                //bind to local IP Address...
+                giorpSocketListener.Bind(ipLocal);
+                //start listening...
+                giorpSocketListener.Listen(100);
+                // create the call back for any client connections...
+                giorpSocketListener.BeginAccept(new AsyncCallback(OnClientConnect), giorpSocketListener);
+                //  cmdListen.Enabled = false;
+
+            }
+            catch (SocketException se)
+            {
+                MessageBox.Show(se.Message);
+            }
         }
     }
 }

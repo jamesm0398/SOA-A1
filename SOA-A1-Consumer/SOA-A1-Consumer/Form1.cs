@@ -48,7 +48,7 @@ namespace SOA_A1_Consumer
             if (!File.Exists(filename))
             {
                 File.Create(filename);
-                File.AppendAllText(filename, "--USER APP LOG-- \n Team: Chaos (James M, John H");
+                File.AppendAllText(filename, "--USER APP LOG-- \n Team: jTeam (James M, John H");
             }
 
             File.AppendAllText(filename, logtext);
@@ -88,6 +88,7 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
             //attempt to send team name to registry
@@ -122,20 +123,13 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
             ////received message from registry
             try
             {
-                //soa_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-                //String ip_addr = Reg_IP.Text;
-                //String s_port = "3128";
-
-                //int port = System.Convert.ToInt32(s_port, 10);
-                //System.Net.IPAddress remoteIP = System.Net.IPAddress.Parse(ip_addr);
-                //System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIP, port);
-                //soa_socket.ReceiveTimeout = 10000;
-                //soa_socket.Connect(remoteEndPoint);
+               
                 byte[] buffer = new byte[1024];
                 int iRx = soa_socket.Receive(buffer);
                 char[] chars = new char[iRx];
@@ -161,20 +155,10 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
-            //regOrUnreg = false;
-            //if(regOrUnreg == false)
-            //{
-            //    register.Text = "Unregister";
-            //    regOrUnreg = true;
-            //}
-
-            //else
-            //{
-            //    register.Text = "Register";
-            //    regOrUnreg = false;
-            //}
+           
            
 
         }
@@ -252,6 +236,7 @@ namespace SOA_A1_Consumer
             catch(SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
             try
@@ -302,6 +287,7 @@ namespace SOA_A1_Consumer
             catch(SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
             
         }
@@ -317,9 +303,10 @@ namespace SOA_A1_Consumer
         //Returns: none
         private void execute_Click(object sender, EventArgs e)
         {
+           
             if (serviceIP == "" || servicePort == "" || numArgs == 0)
             {
-                MessageBox.Show("IP/Port/Number of arguments of service missing");
+                //MessageBox.Show("IP/Port/Number of arguments of service missing");
             }
 
             else
@@ -337,6 +324,7 @@ namespace SOA_A1_Consumer
                 catch(SocketException se)
                 {
                     MessageBox.Show(se.Message);
+                    Logging(se.Message);
                 }
 
                 try
@@ -392,6 +380,7 @@ namespace SOA_A1_Consumer
                 catch (SocketException se)
                 {
                     MessageBox.Show(se.Message);
+                    Logging(se.Message);
                 }
 
                 try
@@ -407,6 +396,8 @@ namespace SOA_A1_Consumer
                     if(!(exeRespData.Contains("NOT")))
                     {
                         responseMsg.Text = exeRespData;
+                   
+
                     }
                     responseMsg.Text = exeRespData;
                     Logging("Message received from published service: ");
@@ -418,6 +409,7 @@ namespace SOA_A1_Consumer
                 catch(SocketException se)
                 {
                     MessageBox.Show(se.Message);
+                    Logging(se.Message);
                 }
             }
         }
@@ -426,10 +418,7 @@ namespace SOA_A1_Consumer
         public void OnProcessExit(object sender, EventArgs e)
         {
            
-           // soa_socket.Shutdown(SocketShutdown.Both);
-            //soa_socket.Close();
-          //  service_socket.Shutdown(SocketShutdown.Both);
-           // service_socket.Close();
+           
          
         }
 
@@ -461,6 +450,7 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
             //attempt to send team name to registry
@@ -483,6 +473,7 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
 
             ////received message from registry
@@ -510,6 +501,7 @@ namespace SOA_A1_Consumer
             catch (System.Net.Sockets.SocketException se)
             {
                 MessageBox.Show(se.Message);
+                Logging(se.Message);
             }
         }
     }

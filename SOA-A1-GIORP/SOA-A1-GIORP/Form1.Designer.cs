@@ -31,7 +31,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.regIP = new System.Windows.Forms.TextBox();
-            this.regTeam = new System.Windows.Forms.Button();
             this.publish = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.teamName = new System.Windows.Forms.Label();
@@ -45,6 +44,7 @@
             this.regPortTxt = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.beginListen = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -72,16 +72,6 @@
             this.regIP.Name = "regIP";
             this.regIP.Size = new System.Drawing.Size(100, 20);
             this.regIP.TabIndex = 4;
-            // 
-            // regTeam
-            // 
-            this.regTeam.Location = new System.Drawing.Point(600, 119);
-            this.regTeam.Name = "regTeam";
-            this.regTeam.Size = new System.Drawing.Size(123, 24);
-            this.regTeam.TabIndex = 5;
-            this.regTeam.Text = "Register Team";
-            this.regTeam.UseVisualStyleBackColor = true;
-            this.regTeam.Click += new System.EventHandler(this.regTeam_Click);
             // 
             // publish
             // 
@@ -192,11 +182,22 @@
             this.label8.TabIndex = 18;
             this.label8.Text = "Registry port:";
             // 
+            // beginListen
+            // 
+            this.beginListen.Location = new System.Drawing.Point(604, 202);
+            this.beginListen.Name = "beginListen";
+            this.beginListen.Size = new System.Drawing.Size(123, 31);
+            this.beginListen.TabIndex = 19;
+            this.beginListen.Text = "Begin listening";
+            this.beginListen.UseVisualStyleBackColor = true;
+            this.beginListen.Click += new System.EventHandler(this.beginListen_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.beginListen);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.regPortTxt);
@@ -210,7 +211,6 @@
             this.Controls.Add(this.teamName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.publish);
-            this.Controls.Add(this.regTeam);
             this.Controls.Add(this.regIP);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
@@ -227,7 +227,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox regIP;
-        private System.Windows.Forms.Button regTeam;
         private System.Windows.Forms.Button publish;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label teamName;
@@ -241,6 +240,7 @@
         private System.Windows.Forms.TextBox regPortTxt;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button beginListen;
     }
 }
 
